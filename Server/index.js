@@ -19,7 +19,6 @@ const FinanceList = require("./model/Finance_List");
 const SecureList = require("./model/SecureList");
 const Password =require("./model/Password");
 
-const serverless = require("serverless-http");
 // your routes...
 
 
@@ -50,12 +49,6 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-app.use((err, req, res, next) => {
-  if (err && err.code === 'ERR_CORS') {
-    console.error("CORS Error:", err);
-  }
-  next(err);
-});
 
  //////////////////////////////////
 app.get("/", (req, res) => {
@@ -275,4 +268,3 @@ app.listen(3000, () => {
 });
 
  
-module.exports.handler = serverless(app);
