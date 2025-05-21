@@ -1,0 +1,200 @@
+@media (max-width :466px) {
+
+
+
+
+    .AddTodoForm p{
+        text-align: center;
+        font-size: 30px;
+        font-weight: 500;
+    }
+
+.AddTodoForm{
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    border-radius: 10px;
+
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 20px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
+
+margin-bottom: 30px;padding-bottom: 20px;
+
+}
+
+.AddTodoForm input {
+height: 30px;
+width: 75%;
+font-size: 20px;
+text-align: center;
+
+border-top: none;
+border-left: none;
+border-right: none;
+background-color: transparent;
+color: black;
+margin-bottom: 15px ;
+
+}
+
+.AddTodoForm input[type="date"] , input[type="time"]{
+    height: 20px;
+    width: 20%;
+    font-size: 12.5px;
+    text-align: center;
+   position: relative;
+   left: -35px;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    background-color: transparent;
+    color: black;
+    margin-right: 20px;
+
+    }
+
+.label1 {
+ 
+margin-left: 70px;
+position: relative;
+right: 40px;
+
+}
+.label2 {
+  
+    position: relative;
+    right: 40px;
+    
+}
+
+
+
+.AddTodoForm button{
+    height: 30px;
+    width: 25%;
+
+
+border-radius: 5px;
+background-color: #f3783a;
+font-size: 20px;
+border: none;
+box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 14px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
+}
+
+
+.AddTodoForm button:active {
+    /* set time duration to your needs */
+    transition-property: all;
+    transition-duration: 0.05s;
+    transition-timing-function: ease-in;
+    /* background: rgb(241, 38, 38); */
+    background-color: #7FFF00;
+    color: #fff;
+    box-shadow: none;
+  }
+
+
+
+
+
+.TodoListContainer{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    }
+    
+    .TodoListP{
+        font-size: 30px;
+        font-weight: 500;
+        text-align: center;
+    }
+    
+    .TodoListBox{
+       
+        width: 85%;
+        display: flex;
+        justify-content: center;
+    flex-wrap: wrap;
+    box-shadow: rgba(9, 30, 66, 0.25) 0px 2px 2px, rgba(9, 30, 66, 0.13) 0px 0px 2px 2px; 
+    border-radius: 20px;
+    padding: 10px ;
+    }
+    
+   
+    
+    
+   
+    .TodoListTitle{
+     height: 30px;
+    width: 100%;
+    margin-bottom: 10px;
+    }
+    
+    .TodoListDes{
+        height: 30px;
+        width: 100%;
+        margin-bottom: 5px;
+
+    }
+    
+    .TodoListDate{
+        height: 30px;
+        width: 40%;
+        font-size: 15px;
+        margin-right: 20px;
+        margin-top: 5px;
+        text-align: center;
+
+    }
+    
+    .TodoListTime{
+        margin-top: 5px;
+    
+        height: 30px;
+        width: 40%;
+        font-size: 15px;
+text-align: center;
+
+
+    }
+    
+    .TodoListButtonDelete , .TodoListButtonDone {
+        height: 30px;
+        width: 30%;
+    
+    position: relative;
+    margin: 5px 10px 5px 10px;
+    border-radius: 5px;
+    background-color: #f3783a;
+    font-size: 20px;
+    border: none;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 14px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
+    
+    }
+    
+    .TodoListButtonDelete:active {
+        /* set time duration to your needs */
+        transition-property: all;
+        transition-duration: 0.05s;
+        transition-timing-function: ease-in;
+        background: rgb(241, 38, 38);
+    
+        /* background-color: #7FFF00; */
+        color: #fff;
+        box-shadow: none;
+      }
+
+      .TodoListButtonDone:active {
+        /* set time duration to your needs */
+        transition-property: all;
+        transition-duration: 0.05s;
+        transition-timing-function: ease-in;
+        background-color: #7FFF00;
+    
+        /* background-color: #7FFF00; */
+        color: #fff;
+        box-shadow: none;
+      }
+
+
+    }

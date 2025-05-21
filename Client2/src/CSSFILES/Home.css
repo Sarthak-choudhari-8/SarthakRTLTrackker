@@ -1,0 +1,82 @@
+@media (max-width :466px) {
+
+.homeContainer{
+ display: flex;
+}
+
+.profileContainer{
+position: relative;
+top: 20px;
+    border-radius: 25px;
+    height: 530px;
+    width: 90%;
+    margin: auto;
+    box-shadow: rgba(9, 30, 66, 0.25) 0px 2px 2px, rgba(9, 30, 66, 0.13) 0px 0px 2px 2px; 
+
+    /* display: flex;
+    justify-content: center; */
+    padding: 10px;
+}
+.profileLogo{
+    border: 1px solid rgb(129, 133, 125);
+    border-radius: 50%;
+    height: 200px;
+    width: 200px;
+    background-image: url(../assets/profile_photo.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    margin: auto;
+}
+
+.ProfileTitle{
+    height: 50px;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+.ProfileTitle p{
+    text-align: center;
+    font-size: 22.5px;
+font-weight: 500;
+}
+
+.profileLinks{
+    height: 100%;
+    width: 50%;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.profileLinks i {
+    font-size: 1.5rem;
+}
+.profileLinks i:active {
+    transition-property: all;
+    transition-duration: 0.05s;
+    transition-timing-function: ease-in;
+    font-size: 1.5rem;
+    color: rgb(101, 245, 5);
+}
+.fa-instagram{
+    color: rgb(214, 55, 90);
+}
+.fa-linkedin{
+    color: blue;
+}
+.fa-github{
+    color: black;
+}
+
+
+.profileDescription{
+    margin-top: 15px;
+height: 150px;
+width: 100%;
+
+}
+
+
+
+}

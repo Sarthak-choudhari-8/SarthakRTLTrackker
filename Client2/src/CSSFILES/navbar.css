@@ -1,0 +1,115 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Roboto&display=swap');
+
+*{
+
+    scroll-behavior: smooth;
+    font-family: "Fredoka", sans-serif;
+}
+
+
+body{
+    margin-top: 150px;
+
+    /* background: linear-gradient(
+        to left,
+      
+        #bccbde,
+        #c2dde6
+    ); */
+        background-color: #e1eaee !important;
+
+    /* background-color: rgb(206, 235, 226) !important; */
+
+    /* Grey silver: #bccbde
+
+    Lightsaber Blue:#c2dde6
+    
+    Purple: #431c5d
+    
+    Orange: #e05915
+    
+    Yellowbrite: #cdd422 */
+    /* Painful Red: #eb1736 */
+    /* Lightning green: #51d0de */
+   /* purple :  #7d3cff  */
+   /* Coral Pink: #ff5e6c */
+
+
+}
+
+@media (max-width :466px) {
+
+.navbar{
+    height: 55px;
+    width: 97.5%;
+    
+display: flex;
+justify-content: space-around;
+align-items: center;
+
+opacity: 0.95;
+position: sticky;
+position: fixed;
+top: 40px;
+left: 4px;
+z-index: 100;
+
+background-color: rgba(255, 255, 255, 0.062);
+
+border-radius: 10px;
+backdrop-filter: blur(10px);
+border: 2px solid rgba(255,255,255,0.1);
+box-shadow: 0 0 30px rgba(8,7,16,0.6);
+
+}
+.logo{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+   
+    height: 80%;
+    width: 70px;
+    background-image: url(../assets/Vlogo.jpg);
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+
+.navComp{
+   
+    height: 50% ;
+    width: 22%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.navComp button{
+    height: 95%;
+    width: 92.5%;
+    font-size: 15px;
+    border-radius: 15px;
+    background-color: #ee784a;
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 20px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
+}
+
+
+.navComp button:active {
+    /* set time duration to your needs */
+    transition-property: all;
+    transition-duration: 0.05s;
+    transition-timing-function: ease-in;
+    
+    background-color: #ff510c;
+    color: #050505;
+    box-shadow: none;
+  }
+}
+
+.CurrentPage button{
+    background-color: #f80404;
+    color: rgb(0, 0, 0);
+}

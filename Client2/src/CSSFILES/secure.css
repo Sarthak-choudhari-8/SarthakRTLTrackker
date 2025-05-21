@@ -1,0 +1,210 @@
+
+
+
+
+@media (max-width :466px) {
+
+
+
+.SecureListingForm{
+
+    height: 250px;
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 20px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
+margin-bottom: 30px;
+}
+
+.SecureListingForm P{
+    text-align: center;
+    font-size: 30px;
+    font-weight: 500;
+    width: 500px;
+    position: relative;
+    top: -20px;
+   
+}
+.SecureListingFormSelect{
+width: 50%;
+height: 30px;
+position: relative;
+top: -30px;
+left: 30px;
+text-align: center;
+font-size: 17.5px;
+    font-weight: 500;
+    border-radius: 20px;
+    border: none;
+    background-color: transparent;
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 6px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+}
+
+.SecureListingForm input {
+    height: 30px;
+width: 90%;
+font-size: 20px;
+text-align: center;
+position: relative;
+top: -20px;
+
+border-top: none;
+border-left: none;
+border-right: none;
+background-color: transparent;
+color: black;
+}
+
+
+
+.SecureListingForm button{
+    height: 30px;
+    width: 25%;
+position: relative;
+
+top: 0px;
+border-radius: 5px;
+background-color: #f3783a;
+font-size: 20px;
+border: none;
+box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 14px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
+
+
+}
+
+.SecureListingForm button:active {
+    /* set time duration to your needs */
+    transition-property: all;
+    transition-duration: 0.05s;
+    transition-timing-function: ease-in;
+    
+    background-color: #7FFF00;
+    color: #fff;
+    box-shadow: none;
+  }
+
+
+
+
+.SecureListContainer{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    }
+    
+    .SecListP{
+        font-size: 30px;
+        font-weight: 500;
+        text-align: center;
+    }
+    
+    .SecureListBox{
+        width: 85%;
+        display: flex;
+        justify-content: center;
+    flex-wrap: wrap;
+    box-shadow: rgba(9, 30, 66, 0.25) 0px 2px 2px, rgba(9, 30, 66, 0.13) 0px 0px 2px 2px; 
+    border-radius: 20px;
+    padding: 10px ;
+    }
+    
+    .SecListHeading{
+        height: 30px;
+        width: 50%;
+        border-radius: 25px;
+        text-align: center;
+        font-size: 25px;
+        font-weight: 500;
+    
+        transition-property: all;
+        transition-duration: 0.2s;
+        transition-timing-function: ease-in;
+        box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
+    
+    }
+    
+    .Tip{
+        background-color: #eb1736 ;
+    }
+    .WishList{
+        background-color: #ffff67;
+
+    }
+    .ToWatch{
+        background-color: #7FFF00;
+    }
+    .Link{
+        background-color: #7d3cff ;
+    
+    }
+    
+    .SecListHeading:hover {
+        color: black;
+        transform: scale(1.1);
+        background-color: #fff;
+        /* box-shadow: rgb(0, 0, 0) 0px 1px 3px, rgb(0, 0, 0) 0px 1px 2px; */
+    }
+    
+   
+    
+    .SecListDes{
+    margin-top: 25px;
+        height: 40px;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    
+    .SecListDate{
+        height: 30px;
+        width: 25%;
+        font-size: 15px;
+        margin-right: 20px;
+        margin-top: 5px;
+    }
+    
+    .SecListTime{
+        margin-top: 5px;
+    
+        height: 30px;
+        width: 25%;
+        font-size: 15px;
+    
+    }
+    
+    .SecListButton{
+        height: 30px;
+        width: 30%;
+    
+    position: relative;
+    left: 20px;
+    border-radius: 5px;
+    background-color: #f3783a;
+    font-size: 20px;
+    border: none;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 14px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
+    
+    }
+    
+    
+     
+      .SecListButton:active {
+        /* set time duration to your needs */
+        transition-property: all;
+        transition-duration: 0.05s;
+        transition-timing-function: ease-in;
+        background: rgb(241, 38, 38);
+        color: #fff;
+        box-shadow: none;
+      }
+
+
+
+
+
+
+
+
+
+
+}
