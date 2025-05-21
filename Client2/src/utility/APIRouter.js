@@ -1,4 +1,4 @@
-export const host = "https://sarthak-rtl-tracker-sarthak-choudhari-8s-projects.vercel.app/";
+export const host = "https://sarthak-rtl-trackker-backend.vercel.app/";
 
 
  export const addTodoRoute = `${host}postTodo`;
