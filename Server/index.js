@@ -19,11 +19,13 @@ const FinanceList = require("./model/Finance_List");
 const SecureList = require("./model/SecureList");
 const Password =require("./model/Password");
 
+
 let corsOption = {
     origin: ["https://sarthak-rtl-trackker.vercel.app/"],
-        method: ["GET","POST","DELETE","PUT","PATCH"],
-    credentials: true
+    method: "GET,POST,DELETE,PUT,PATCH",
+    credential: "true"
 }
+
 
 app.use(express.json());
 app.use(cors(corsOption));
