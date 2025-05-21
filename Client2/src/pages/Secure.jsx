@@ -14,7 +14,7 @@ import "../CSSFILES/finance.css";
 
 const Secure = () => {
 
-  const [verified, setVerified] = useState(false);
+  const [verified, setVerified] = useState(true);
   const [inputPassword, setInputPassword] = useState('');
   const [secureList, setSecureList] = useState([]);
   const [formData, setFormData] = useState({
