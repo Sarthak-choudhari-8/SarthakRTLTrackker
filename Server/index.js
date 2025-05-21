@@ -20,12 +20,12 @@ const SecureList = require("./model/SecureList");
 const Password =require("./model/Password");
 
 
-let corsOption = {
-  origin: "https://sarthak-rtl-trackker.vercel.app",  // ✅ Remove trailing slash
-  methods: ["GET", "POST", "DELETE", "PUT", "PATCH"], // ✅ Correct key, use array
-  credentials: true                                   // ✅ Correct spelling and boolean value
-};
 
+let corsOption = {
+    origin: ["https://sarthak-rtl-trackker.vercel.app"],
+    method: ["GET,POST,DELETE,PUT,PATCH"],
+    credential: true
+}
 
 app.use(express.json());
 app.use(cors(corsOption));
@@ -54,9 +54,11 @@ const transporter = nodemailer.createTransport({
 
 
  //////////////////////////////////
-app.get( "/",(req,res)=>{
-    res.send("hello root");
-})
+app.get("/", (req, res) => {
+
+    res.send("this is root ");
+
+});
 
 app.get("/getTodos", async(req,res)=>{
 
