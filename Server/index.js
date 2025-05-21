@@ -23,17 +23,7 @@ const serverless = require("serverless-http");
 // your routes...
 
 
-
-let corsOptions = {
-  origin: [
-    "http://localhost:5173",
-    "https://sarthak-rtl-trackker.vercel.app"
-  ],
-    method: ["get,post"],
-    credential: true
-}
-
-app.use(cors(corsOptions));
+app.use(cors({ origin: "*" }));
 
 app.use(express.json());
 
