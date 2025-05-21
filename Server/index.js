@@ -21,10 +21,10 @@ const Password =require("./model/Password");
 
 
 let corsOption = {
-    origin: ["https://sarthak-rtl-trackker.vercel.app/"],
-    method: "GET,POST,DELETE,PUT,PATCH",
-    credential: "true"
-}
+  origin: "https://sarthak-rtl-trackker.vercel.app",  // ✅ Remove trailing slash
+  methods: ["GET", "POST", "DELETE", "PUT", "PATCH"], // ✅ Correct key, use array
+  credentials: true                                   // ✅ Correct spelling and boolean value
+};
 
 
 app.use(express.json());
