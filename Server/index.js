@@ -24,15 +24,16 @@ const serverless = require("serverless-http");
 
 
 
-let corsOption = {
-    origin: ["https://sarthak-rtl-trackker.vercel.app"],
-    method: ["GET,POST,DELETE,PUT,PATCH"],
+let corsOptions = {
+  origin: [
+    "http://localhost:5173",
+    "https://sarthak-rtl-trackker.vercel.app"
+  ],
+    method: ["get,post"],
     credential: true
 }
 
-app.use(cors({
-  origin: "*", 
-}));
+app.use(cors(corsOptions));
 
 app.use(express.json());
 
@@ -76,6 +77,7 @@ app.get("/", (req, res) => {
 app.get("/getTodos", async(req,res)=>{
 
 
+    console.log("get todos received");
     
         let todos = await  TodoList.find({});
     

@@ -28,6 +28,7 @@ const Todo = () =>{
 
     const fetchTodos = async () => {
         try {
+            console.log("req send ")
             let { data } = await axios.get(getTodosRoute);
         
             setData(data.todos);
