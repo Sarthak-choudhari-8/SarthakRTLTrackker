@@ -19,6 +19,9 @@ const FinanceList = require("./model/Finance_List");
 const SecureList = require("./model/SecureList");
 const Password =require("./model/Password");
 
+const serverless = require("serverless-http");
+// your routes...
+
 
 
 let corsOption = {
@@ -27,9 +30,13 @@ let corsOption = {
     credential: true
 }
 
-app.use(express.json());
-app.use(cors(corsOption));
+app.use(cors({
+  origin: "*", 
+}));
 
+app.use(express.json());
+
+// app.use(cors(corsOption));
 
 main().then(() => {
     console.log("connected to DB");
@@ -52,6 +59,12 @@ const transporter = nodemailer.createTransport({
     }
 });
 
+app.use((err, req, res, next) => {
+  if (err && err.code === 'ERR_CORS') {
+    console.error("CORS Error:", err);
+  }
+  next(err);
+});
 
  //////////////////////////////////
 app.get("/", (req, res) => {
@@ -264,7 +277,10 @@ app.post("/deleteSecureList",async (req,res)=>{
 
 })
 //  ------------------------------------------------------------
-app.listen(8080,() =>{
-    console.log("listening to port 8080")
-})
+
+app.listen(3000, () => {
+  console.log("Server listening on port 3000");
+});
+
  
+module.exports.handler = serverless(app);
