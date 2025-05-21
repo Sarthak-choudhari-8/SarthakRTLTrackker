@@ -20,7 +20,7 @@ const SecureList = require("./model/SecureList");
 const Password =require("./model/Password");
 
 let corsOption = {
-    origin: ["http://localhost:5173"],
+    origin: ["https://sarthak-rtl-trackker.vercel.app/"],
         method: ["GET","POST","DELETE","PUT","PATCH"],
     credentials: true
 }

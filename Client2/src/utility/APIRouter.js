@@ -1,4 +1,4 @@
-export const host = "http://localhost:8080/";
+export const host = "https://sarthak-rtl-tracker-sarthak-choudhari-8s-projects.vercel.app/";
 
 
  export const addTodoRoute = `${host}postTodo`;
