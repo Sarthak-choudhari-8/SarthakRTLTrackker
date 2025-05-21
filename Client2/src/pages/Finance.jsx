@@ -19,7 +19,7 @@ import { useState , useEffect } from "react";
 const Finance = () =>{
  
 
-  const [verified, setVerified] = useState(true);
+  const [verified, setVerified] = useState(false);
   const [inputPassword, setInputPassword] = useState('');
   const [finList, setFinList] = useState([]);
 
