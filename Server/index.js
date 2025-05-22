@@ -103,28 +103,30 @@ app.post("/postTodo", async (req, res) => {
   });
 
   await todo1.save();
+alert("whats send");
 
   schedule.scheduleJob(sendDateObj, async function () {
     console.log("Sending WhatsApp message now...");
 
-   let whatsappNumber = "+917776883510";
 
+   let whatsappNumber = "+917776883510";
 
     if (whatsappNumber) {
       try {
         const whatsappMessage = `Reminder: ${title}\nTask: ${description}\nScheduled Time: ${sendDateObj.toLocaleString()}`;
         await sendWhatsAppMessage(whatsappNumber, whatsappMessage);
         console.log("WhatsApp message sent successfully");
-        res.send("send");
+        
       } catch (error) {
         console.error("Error sending WhatsApp message:", error);
-         res.send("not send");
+  
 
       }
     }
   });
 
-  return res.json({ status: true });
+  let s= sendDateObj.toLocaleString();
+  return res.json({ status: true ,s });
 });
 
 

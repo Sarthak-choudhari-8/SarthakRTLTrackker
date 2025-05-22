@@ -62,9 +62,10 @@ const Todo = () =>{
               title,description,sendDateTime
             });
 
-        
+        console.log(data)
 if(data.status){
     alert("message Scheduled");
+    
 }
             setTodoValues({ title: " ", description: " " }); // Clear form
            fetchTodos(); 
