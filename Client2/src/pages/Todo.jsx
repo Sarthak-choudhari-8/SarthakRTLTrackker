@@ -64,7 +64,7 @@ const Todo = () =>{
 
         
 if(data.status){
-    alert("Mail Scheduled");
+    alert("message Scheduled");
 }
             setTodoValues({ title: " ", description: " " }); // Clear form
            fetchTodos(); 
@@ -84,6 +84,7 @@ let DoneTodo = async (id,doneVal) =>{
         });
         fetchTodos();
 }
+
 
 
     return(

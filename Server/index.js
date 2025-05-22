@@ -12,6 +12,7 @@ const DBURL = process.env.ATLAS_URL;
 const cron = require("node-cron");
 const nodemailer = require("nodemailer");
 const schedule = require('node-schedule');
+const twilio = require("twilio");
 
 const TodoList =  require("./model/TodoList");
 const Finance =  require("./model/Finance_Balance");
@@ -36,19 +37,35 @@ main().then(() => {
     })
 
 async function main() {
-await mongoose.connect(DBURL)
+await mongoose.connect(MongoURL)
 }
 
-const transporter = nodemailer.createTransport({
-    host: "smtp-relay.brevo.com", // Brevo's SMTP server
-    port: 587, // Use 587 for TLS or 465 for SSL
-    secure: false, // Set to `true` if using port 465
-    auth: {
-        user: "8da1ba001@smtp-brevo.com",  // Replace with your Brevo SMTP username
-        pass: "r9YtFzDv72sV5TcZ"   // Replace with your Brevo SMTP password
-    }
-});
+const TWILIO_SID = "ACa8060e775e5849df318ba6190af8d6b5"; // your Twilio Account SID
+const TWILIO_AUTH_TOKEN = "8798d2b5c4f4df1d01bd30e63094333b"; // your Twilio Auth Token
+const TWILIO_WHATSAPP_FROM = "whatsapp:+14155238886"; // your Twilio WhatsApp number
 
+const twilioClient = twilio(TWILIO_SID, TWILIO_AUTH_TOKEN);
+// Function to send WhatsApp message via Twilio
+function sendWhatsAppMessage(to, message) {
+  return twilioClient.messages.create({
+    from: TWILIO_WHATSAPP_FROM,
+    to: `whatsapp:${to}`,
+    body: message,
+  });
+}
+
+// const accountSid = 'ACa8060e775e5849df318ba6190af8d6b5';
+// const authToken = '8798d2b5c4f4df1d01bd30e63094333b';
+// const client = require('twilio')(accountSid, authToken);
+
+// client.messages
+//     .create({
+//         body: 'Your appointment is coming up on July 21 at 3PM',
+//         from: 'whatsapp:+14155238886',
+//         to: 'whatsapp:+917776883510'
+//     })
+//     .then(message => console.log(message.sid))
+//     .done();
 
 
 
@@ -71,55 +88,41 @@ app.get("/getTodos", async(req,res)=>{
   
 })
 
-app.post("/postTodo", async(req, res) => {
-    let { title, description,sendDateTime} = req.body;
 
-    let sendDateObj = new Date(sendDateTime);
+app.post("/postTodo", async (req, res) => {
+  let { title, description, sendDateTime } = req.body;
 
-  
-    sendDateObj.setHours(sendDateObj.getHours() );
-    sendDateObj.setMinutes(sendDateObj.getMinutes() );
+  let sendDateObj = new Date(sendDateTime);
+  sendDateObj.setHours(sendDateObj.getHours());
+  sendDateObj.setMinutes(sendDateObj.getMinutes());
 
-   
+  let todo1 = new TodoList({
+    title: title,
+    description: description,
+    sendDateTime: sendDateObj,
+  });
 
-    let todo1 = new TodoList({
-        title: title,
-        description: description,
-        sendDateTime: sendDateObj,
-    });
+  await todo1.save();
 
-        await todo1.save();
-        schedule.scheduleJob(sendDateObj, async function(){
-            console.log("Sending Email Now...");
-    
-            let mailOptions = {
-                from: 'chaudharisarthak727@gmail.com',
-                to: 'sarthakchaudhari888@gmail.com',to:"prime.optimus7776@gmail.com",
-                subject: `📌 Reminder: ${title}`,
-                html: `
-                    <h2>Hello!</h2>
-                    <p>This is your scheduled reminder.</p>
-                    <p><strong>Task:</strong> ${description}</p>
-                    <p><strong>Scheduled Time:</strong> ${sendDateObj.toLocaleString()}</p>
-                    <hr/>
-                    <p style="font-size: 12px; color: gray;">Sent via Sarthak Web App</p>
-                `
-            };
-    
-            try {
-                await transporter.sendMail(mailOptions);
-                console.log("Email sent successfully ");
-            } catch (error) {
-                console.error('Error sending email:', error);
-            }
-        });
-    
+  schedule.scheduleJob(sendDateObj, async function () {
+    console.log("Sending WhatsApp message now...");
 
-        return res.json({ status: true })
-    
-   
+   let whatsappNumber = "+917776883510";
 
-})
+
+    if (whatsappNumber) {
+      try {
+        const whatsappMessage = `Reminder: ${title}\nTask: ${description}\nScheduled Time: ${sendDateObj.toLocaleString()}`;
+        await sendWhatsAppMessage(whatsappNumber, whatsappMessage);
+        console.log("WhatsApp message sent successfully");
+      } catch (error) {
+        console.error("Error sending WhatsApp message:", error);
+      }
+    }
+  });
+
+  return res.json({ status: true });
+});
 
 
 app.post("/deleteTodo",async (req,res)=>{
