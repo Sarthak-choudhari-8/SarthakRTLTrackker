@@ -37,7 +37,7 @@ main().then(() => {
     })
 
 async function main() {
-await mongoose.connect(MongoURL)
+await mongoose.connect(DBURL)
 }
 
 const TWILIO_SID = "ACa8060e775e5849df318ba6190af8d6b5"; // your Twilio Account SID

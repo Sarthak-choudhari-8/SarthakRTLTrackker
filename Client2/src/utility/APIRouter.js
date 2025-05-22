@@ -1,5 +1,5 @@
-export const host = "http://localhost:3000";
-// export const host = "https://sarthak-rtl-trackker-ei68.vercel.app";
+// export const host = "http://localhost:3000";
+export const host = "https://sarthak-rtl-trackker-ei68.vercel.app";
 
 
  export const addTodoRoute = `${host}/postTodo`;
