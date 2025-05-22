@@ -63,7 +63,9 @@ const Todo = () =>{
             });
 
         
-
+if(data.status){
+    alert("Mail Scheduled");
+}
             setTodoValues({ title: " ", description: " " }); // Clear form
            fetchTodos(); 
            Navigate("/todo")

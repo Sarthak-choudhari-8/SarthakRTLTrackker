@@ -44,10 +44,12 @@ const transporter = nodemailer.createTransport({
     port: 587, // Use 587 for TLS or 465 for SSL
     secure: false, // Set to `true` if using port 465
     auth: {
-        user: "8d64e7001@smtp-brevo.com",  // Replace with your Brevo SMTP username
-        pass: "M3KRvnNmTE824Hj7"   // Replace with your Brevo SMTP password
+        user: "8da1ba001@smtp-brevo.com",  // Replace with your Brevo SMTP username
+        pass: "r9YtFzDv72sV5TcZ"   // Replace with your Brevo SMTP password
     }
 });
+
+
 
 
  //////////////////////////////////
@@ -91,8 +93,8 @@ app.post("/postTodo", async(req, res) => {
             console.log("Sending Email Now...");
     
             let mailOptions = {
-                from: 'prime.optimus7776@gmail.com',
-                to: 'sarthakchaudhari888@gmail.com',
+                from: 'chaudharisarthak727@gmail.com',
+                to: 'sarthakchaudhari888@gmail.com',to:"prime.optimus7776@gmail.com",
                 subject: `📌 Reminder: ${title}`,
                 html: `
                     <h2>Hello!</h2>
