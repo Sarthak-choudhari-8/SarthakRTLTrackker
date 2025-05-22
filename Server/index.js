@@ -1,5 +1,5 @@
 
-    require("dotenv").config();
+ require("dotenv").config();
 
 const express =  require("express");
 const cors =  require("cors");
@@ -41,7 +41,7 @@ await mongoose.connect(DBURL)
 }
 
 const TWILIO_SID = "ACa8060e775e5849df318ba6190af8d6b5"; // your Twilio Account SID
-const TWILIO_AUTH_TOKEN = "8798d2b5c4f4df1d01bd30e63094333b"; // your Twilio Auth Token
+const TWILIO_AUTH_TOKEN = "f7fb40d65de1b5a5cc2a3c49702adb00"; // your Twilio Auth Token
 const TWILIO_WHATSAPP_FROM = "whatsapp:+14155238886"; // your Twilio WhatsApp number
 
 const twilioClient = twilio(TWILIO_SID, TWILIO_AUTH_TOKEN);
@@ -79,7 +79,6 @@ app.get("/", (req, res) => {
 app.get("/getTodos", async(req,res)=>{
 
 
-    console.log("get todos received");
     
         let todos = await  TodoList.find({});
     
@@ -103,11 +102,12 @@ app.post("/postTodo", async (req, res) => {
   });
 
   await todo1.save();
-alert("whats send");
+
 
   schedule.scheduleJob(sendDateObj, async function () {
-    console.log("Sending WhatsApp message now...");
 
+
+console.log(sendDateObj)
 
    let whatsappNumber = "+917776883510";
 
@@ -125,8 +125,7 @@ alert("whats send");
     }
   });
 
-  let s= sendDateObj.toLocaleString();
-  return res.json({ status: true ,s });
+  return res.json({ status: true  });
 });
 
 

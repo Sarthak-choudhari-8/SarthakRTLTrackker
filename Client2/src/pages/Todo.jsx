@@ -28,7 +28,6 @@ const Todo = () =>{
 
     const fetchTodos = async () => {
         try {
-            console.log("req send ")
             let { data } = await axios.get(getTodosRoute);
         
             setData(data.todos);
@@ -62,7 +61,9 @@ const Todo = () =>{
               title,description,sendDateTime
             });
 
-       
+       if(data.status){
+        alert("message Scheduled");
+       }
 
             setTodoValues({ title: " ", description: " " }); // Clear form
            fetchTodos(); 
