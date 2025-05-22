@@ -115,8 +115,11 @@ app.post("/postTodo", async (req, res) => {
         const whatsappMessage = `Reminder: ${title}\nTask: ${description}\nScheduled Time: ${sendDateObj.toLocaleString()}`;
         await sendWhatsAppMessage(whatsappNumber, whatsappMessage);
         console.log("WhatsApp message sent successfully");
+        res.send("send");
       } catch (error) {
         console.error("Error sending WhatsApp message:", error);
+         res.send("not send");
+
       }
     }
   });
