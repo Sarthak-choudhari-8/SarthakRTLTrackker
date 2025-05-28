@@ -40,34 +40,27 @@ async function main() {
 await mongoose.connect(DBURL)
 }
 
-const TWILIO_SID = "ACa8060e775e5849df318ba6190af8d6b5"; // your Twilio Account SID
-const TWILIO_AUTH_TOKEN = "f7fb40d65de1b5a5cc2a3c49702adb00"; // your Twilio Auth Token
-const TWILIO_WHATSAPP_FROM = "whatsapp:+14155238886"; // your Twilio WhatsApp number
 
-const twilioClient = twilio(TWILIO_SID, TWILIO_AUTH_TOKEN);
-// Function to send WhatsApp message via Twilio
-function sendWhatsAppMessage(to, message) {
-  return twilioClient.messages.create({
-    from: TWILIO_WHATSAPP_FROM,
-    to: `whatsapp:${to}`,
-    body: message,
-  });
+const transporter = nodemailer.createTransport({
+  host: "smtp-relay.brevo.com",
+  port: 587,
+  secure: false,
+  auth: {
+    user: "8da1ba001@smtp-brevo.com",
+    pass: r9YtFzDv72sV5TcZ,
+  },
+});
+
+function sendEmail(to, subject, text) {
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to,
+    subject,
+    text,
+  };
+
+  return transporter.sendMail(mailOptions);
 }
-
-// const accountSid = 'ACa8060e775e5849df318ba6190af8d6b5';
-// const authToken = '8798d2b5c4f4df1d01bd30e63094333b';
-// const client = require('twilio')(accountSid, authToken);
-
-// client.messages
-//     .create({
-//         body: 'Your appointment is coming up on July 21 at 3PM',
-//         from: 'whatsapp:+14155238886',
-//         to: 'whatsapp:+917776883510'
-//     })
-//     .then(message => console.log(message.sid))
-//     .done();
-
-
 
  //////////////////////////////////
 app.get("/", (req, res) => {
@@ -87,7 +80,6 @@ app.get("/getTodos", async(req,res)=>{
   
 })
 
-
 app.post("/postTodo", async (req, res) => {
   let { title, description, sendDateTime } = req.body;
 
@@ -96,36 +88,31 @@ app.post("/postTodo", async (req, res) => {
   sendDateObj.setMinutes(sendDateObj.getMinutes());
 
   let todo1 = new TodoList({
-    title: title,
-    description: description,
+    title,
+    description,
     sendDateTime: sendDateObj,
   });
 
   await todo1.save();
 
+  let emailAddress = "sarthakchaudhari888@gmail.com"; // Static or from frontend
 
   schedule.scheduleJob(sendDateObj, async function () {
+    const message = `Reminder:\nTitle: ${title}\nTask: ${description}\nTime: ${sendDateObj.toLocaleString()}`;
+    console.log("🔔 Sending reminders for:", sendDateObj);
 
-
-console.log(sendDateObj)
-
-   let whatsappNumber = "+917776883510";
-
-    if (whatsappNumber) {
-      try {
-        const whatsappMessage = `Reminder: ${title}\nTask: ${description}\nScheduled Time: ${sendDateObj.toLocaleString()}`;
-        await sendWhatsAppMessage(whatsappNumber, whatsappMessage);
-        console.log("WhatsApp message sent successfully");
-        
-      } catch (error) {
-        console.error("Error sending WhatsApp message:", error);
+    // Send WhatsApp
   
-
-      }
+    // Send Email
+    try {
+      await sendEmail(emailAddress, "To-Do Reminder", message);
+      console.log("✅ Email sent");
+    } catch (err) {
+      console.error("❌ Email error:", err.message);
     }
   });
 
-  return res.json({ status: true  });
+  return res.json({ status: true });
 });
 
 
