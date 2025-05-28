@@ -45,6 +45,8 @@ const Todo = () => {
 
   // Setup Service Worker and Push Notifications
   useEffect(() => {
+        fetchTodos();
+
     if ("serviceWorker" in navigator && "PushManager" in window) {
       navigator.serviceWorker
         .register("/service-worker.js")
@@ -100,7 +102,6 @@ const Todo = () => {
 
   // Fetch todos on component mount
   useEffect(() => {
-    fetchTodos();
   }, []);
 
   // Handle form input changes
