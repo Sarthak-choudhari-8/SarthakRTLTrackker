@@ -20,6 +20,7 @@
     "nodemailer": "^6.10.1",
     "nodemon": "^3.1.10",
     "serverless-http": "^3.2.0",
-    "twilio": "^5.6.1"
+    "twilio": "^5.6.1",
+    "web-push": "^3.6.7"
   }
 }

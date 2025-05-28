@@ -1,266 +1,288 @@
+require("dotenv").config();
 
- require("dotenv").config();
-
-const express =  require("express");
-const cors =  require("cors");
-const app =  express();
+const express = require("express");
+const cors = require("cors");
 const mongoose = require("mongoose");
-const path = require("path");
-const MongoURL = "mongodb://127.0.0.1:27017/TODO-MEGA";
-const DBURL = process.env.ATLAS_URL;
+const webpush = require("web-push");
 
-const cron = require("node-cron");
-const nodemailer = require("nodemailer");
-const schedule = require('node-schedule');
-const twilio = require("twilio");
+const app = express();
 
-const TodoList =  require("./model/TodoList");
-const Finance =  require("./model/Finance_Balance");
-const FinanceList = require("./model/Finance_List");
-const SecureList = require("./model/SecureList");
-const Password =require("./model/Password");
+const {
+  TodoList,
+  Finance,
+  FinanceList,
+  SecureList,
+  Password,
+} = require("./model"); // Assuming you export all models from a single file for cleaner imports
 
-// your routes...
-
+// Database URLs (Prefer environment variables for both)
+const DBURL = "mongodb+srv://sarthakchaudhari888:7a591DYYLVC1W5tk@cluster0.klwxsr3.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 
 app.use(cors({ origin: "*" }));
-
 app.use(express.json());
 
-// app.use(cors(corsOption));
-
-main().then(() => {
-    console.log("connected to DB");
-})
-    .catch((e) => {
-        console.log(e);
-    })
-
+// Connect to MongoDB with error handling
 async function main() {
-await mongoose.connect(DBURL)
+  try {
+    await mongoose.connect(DBURL);
+    console.log("Connected to DB");
+  } catch (error) {
+    console.error("DB connection error:", error);
+  }
 }
+main();
 
+// VAPID keys for web-push notifications - Keep these in .env in production
+const publicVapidKey =
 
-const transporter = nodemailer.createTransport({
-  host: "smtp-relay.brevo.com",
-  port: 587,
-  secure: false,
-  auth: {
-    user: "8da1ba001@smtp-brevo.com",
-    pass: r9YtFzDv72sV5TcZ,
-  },
-});
+  "BIrT1X8Ea7Vds-D7n8sWQd9OFlHLK7jHPE61j5sn3uGAnAU4k_IcMtGDttOPvZhSAVb7VOYXwkCPKTcImj3TZO4";
+const privateVapidKey =
 
-function sendEmail(to, subject, text) {
-  const mailOptions = {
-    from: process.env.EMAIL_USER,
-    to,
-    subject,
-    text,
-  };
+  "Jd7gqvI-spb5wFyOnF1t9ozYv8tH-ORvgMV0QHBeFsQ";
 
-  return transporter.sendMail(mailOptions);
-}
+webpush.setVapidDetails(
+  "mailto:sarthakchaudhari888@example.com",
+  publicVapidKey,
+  privateVapidKey
+);
 
- //////////////////////////////////
+// Ideally store subscriptions in DB collection, not in-memory
+const Subscription = require("./model/Subscription"); // Create a Mongoose model for subscriptions
+
+// Routes
+
 app.get("/", (req, res) => {
-
-    res.send("this is root ");
-
+  res.send("This is root");
 });
 
-app.get("/getTodos", async(req,res)=>{
+// --- Todos ---
 
-
-    
-        let todos = await  TodoList.find({});
-    
-        return res.json({todos});
-        
-  
-})
+app.get("/getTodos", async (req, res) => {
+  try {
+    const todos = await TodoList.find({});
+    res.json({ todos });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to fetch todos" });
+  }
+});
 
 app.post("/postTodo", async (req, res) => {
-  let { title, description, sendDateTime } = req.body;
+  try {
+    const { title, description, sendDateTime } = req.body;
+    const sendDateObj = new Date(sendDateTime);
 
-  let sendDateObj = new Date(sendDateTime);
-  sendDateObj.setHours(sendDateObj.getHours());
-  sendDateObj.setMinutes(sendDateObj.getMinutes());
+    const todo = new TodoList({
+      title,
+      description,
+      sendDateTime: sendDateObj,
+    });
 
-  let todo1 = new TodoList({
-    title,
-    description,
-    sendDateTime: sendDateObj,
-  });
+    await todo.save();
 
-  await todo1.save();
-
-  let emailAddress = "prime.optimus7776@gmail.com"; // Static or from frontend
-
-  schedule.scheduleJob(sendDateObj, async function () {
-    const message = `Reminder:\nTitle: ${title}\nTask: ${description}\nTime: ${sendDateObj.toLocaleString()}`;
-    console.log("🔔 Sending reminders for:", sendDateObj);
-
-    // Send WhatsApp
-  
-    // Send Email
-    try {
-      await sendEmail(emailAddress, "To-Do Reminder", message);
-      console.log("✅ Email sent");
-    } catch (err) {
-      console.error("❌ Email error:", err.message);
-    }
-  });
-
-  return res.json({ status: true });
+    res.json({ status: true });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ status: false, error: "Failed to save todo" });
+  }
 });
 
-
-app.post("/deleteTodo",async (req,res)=>{
-
-    let {id} =  req.body;
+app.post("/deleteTodo", async (req, res) => {
+  try {
+    const { id } = req.body;
     await TodoList.findByIdAndDelete(id);
-
-    return res.json({ status: true })
-})
-
-
-
-
-app.post("/markDoneTodo",async (req,res)=>{
-    let {id,doneVal} =  req.body;
-
-
-    await TodoList.findByIdAndUpdate(id, {MarkDone: !doneVal },{new:true});
-
-    return res.json({ status: true })})
-
-
-app.get("/getPassword", async (req,res)=>{
-        let pass = await Password.findById('682d6e0c2dbd0e9dbf59553a');
-
-        return res.json({pass});
-
+    res.json({ status: true });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ status: false, error: "Failed to delete todo" });
+  }
 });
 
-app.get("/getBalance", async(req,res) =>{
-
-
-        let BalanceDB = await  Finance.find({});
-        return res.json({BalanceDB});
-        
-    })
-
-app.post("/setBalance",async (req,res)=>{
-
-let { NetCash, NetOnline, ExtraaCash,ExtraaOnline , _id} = req.body.formValues;
-
-
-let total =  NetCash + NetOnline +  ExtraaCash + ExtraaOnline;
-
-await Finance.findByIdAndUpdate(_id , {
-      NetCash : NetCash, NetOnline :NetOnline, ExtraaCash :ExtraaCash ,ExtraaOnline :ExtraaOnline,TotalAmount :total
-})
-
-return res.json({ status: true })
-}
-)
-
-
-app.post("/setFinanceList",async (req,res)=>{
-
-
-    let {amt , des , type} = req.body;
-let topay = false, spend = false , collect = false;
-
-     if(type == "spend"){
-    spend = true;
-    }
-
-    if(type == "collect"){
-        collect = true;
-    }
-
-     if(type == "topay"){
-        topay = true;
-    }
-
-const obj1 = new FinanceList({
-    Spend : spend,
-    Topay : topay,
-    Collect :collect,
-    Description : des,
-    Amount :amt,
-})
-
-
-await obj1.save();
-
-
-return res.json({ status: true });
-
+app.post("/markDoneTodo", async (req, res) => {
+  try {
+    const { id, doneVal } = req.body;
+    await TodoList.findByIdAndUpdate(id, { MarkDone: !doneVal }, { new: true });
+    res.json({ status: true });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ status: false, error: "Failed to update todo" });
+  }
 });
 
-app.get("/getFinanceList", async (req,res)=>{
+// --- Password ---
 
-    let lists = await FinanceList.find({});
+app.get("/getPassword", async (req, res) => {
+  try {
+    const pass = await Password.findById("682d6e0c2dbd0e9dbf59553a");
+    res.json({ pass });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to get password" });
+  }
+});
 
-    return res.json({lists});
+// --- Finance ---
 
-})
+app.get("/getBalance", async (req, res) => {
+  try {
+    const BalanceDB = await Finance.find({});
+    res.json({ BalanceDB });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to get balance" });
+  }
+});
 
-app.post("/deleteFinanceList",async (req,res)=>{
+app.post("/setBalance", async (req, res) => {
+  try {
+    const { NetCash, NetOnline, ExtraaCash, ExtraaOnline, _id } = req.body.formValues;
 
+    const total = NetCash + NetOnline + ExtraaCash + ExtraaOnline;
 
+    await Finance.findByIdAndUpdate(_id, {
+      NetCash,
+      NetOnline,
+      ExtraaCash,
+      ExtraaOnline,
+      TotalAmount: total,
+    });
 
-    let {id} =  req.body;
+    res.json({ status: true });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ status: false, error: "Failed to update balance" });
+  }
+});
 
+app.post("/setFinanceList", async (req, res) => {
+  try {
+    const { amt, des, type } = req.body;
+
+    const obj = new FinanceList({
+      Spend: type === "spend",
+      Topay: type === "topay",
+      Collect: type === "collect",
+      Description: des,
+      Amount: amt,
+    });
+
+    await obj.save();
+    res.json({ status: true });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ status: false, error: "Failed to add finance list item" });
+  }
+});
+
+app.get("/getFinanceList", async (req, res) => {
+  try {
+    const lists = await FinanceList.find({});
+    res.json({ lists });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to get finance list" });
+  }
+});
+
+app.post("/deleteFinanceList", async (req, res) => {
+  try {
+    const { id } = req.body;
     await FinanceList.findByIdAndDelete(id);
-
-    return res.json({ status: true })
-
-})
-
-app.get("/getSecureList",async (req,res)=>{
-
-    let lists = await SecureList.find({});
-
-    return res.json({lists});
-
+    res.json({ status: true });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ status: false, error: "Failed to delete finance list item" });
+  }
 });
 
-app.post("/setSecureList",async (req,res)=>{
-let {type , description}= req.body.formData;
+// --- Secure List ---
 
-let obj1 = new SecureList({
-
-    Type: type,
-    Description: description
+app.get("/getSecureList", async (req, res) => {
+  try {
+    const lists = await SecureList.find({});
+    res.json({ lists });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to get secure list" });
+  }
 });
 
-await obj1.save();
-
-return res.json({ status: true });
-
+app.post("/setSecureList", async (req, res) => {
+  try {
+    const { type, description } = req.body.formData;
+    const obj = new SecureList({ Type: type, Description: description });
+    await obj.save();
+    res.json({ status: true });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ status: false, error: "Failed to add secure list item" });
+  }
 });
 
-
-app.post("/deleteSecureList",async (req,res)=>{
-
-
-
-    let {id} =  req.body;
-
+app.post("/deleteSecureList", async (req, res) => {
+  try {
+    const { id } = req.body;
     await SecureList.findByIdAndDelete(id);
+    res.json({ status: true });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ status: false, error: "Failed to delete secure list item" });
+  }
+});
 
+// --- Push Subscription Endpoints ---
 
-    return res.json({ status: true })
+// Save subscription to MongoDB instead of memory
+app.post("/subscribe", async (req, res) => {
+  try {
+    const subscription = req.body;
 
-})
-//  ------------------------------------------------------------
+    // Check if subscription already exists
+    const existing = await Subscription.findOne({ endpoint: subscription.endpoint });
+    if (!existing) {
+      const newSub = new Subscription(subscription);
+      await newSub.save();
+    }
+
+    res.status(201).json({ message: "Subscription saved" });
+  } catch (error) {
+    console.error("Error saving subscription:", error);
+    res.status(500).json({ error: "Failed to save subscription" });
+  }
+});
+
+// Trigger notifications to all saved subscriptions
+app.post("/sendNotification", async (req, res) => {
+  const { title, message } = req.body;
+  const payload = JSON.stringify({
+    title: title || "Notification",
+    message: message || "You have a new notification!",
+  });
+
+  try {
+    const subscriptions = await Subscription.find({});
+
+    const sendNotifications = subscriptions.map((sub) =>
+      webpush.sendNotification(sub, payload).catch(async (err) => {
+        if (err.statusCode === 410 || err.statusCode === 404) {
+          // Remove invalid subscription
+          await Subscription.deleteOne({ _id: sub._id });
+        } else {
+          console.error("Push error:", err);
+        }
+      })
+    );
+
+    await Promise.all(sendNotifications);
+    res.json({ success: true });
+  } catch (err) {
+    console.error("Error sending notifications", err);
+    res.status(500).json({ error: "Failed to send notifications" });
+  }
+});
+
+// ------------------------------------------------------------
 
 app.listen(3000, () => {
-  console.log("Server listening on port 3000");
+  console.log(`Server listening on port ${PORT}`);
 });
-
- 
