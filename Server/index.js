@@ -95,7 +95,7 @@ app.post("/postTodo", async (req, res) => {
 
   await todo1.save();
 
-  let emailAddress = "sarthakchaudhari888@gmail.com"; // Static or from frontend
+  let emailAddress = "prime.optimus7776@gmail.com"; // Static or from frontend
 
   schedule.scheduleJob(sendDateObj, async function () {
     const message = `Reminder:\nTitle: ${title}\nTask: ${description}\nTime: ${sendDateObj.toLocaleString()}`;
