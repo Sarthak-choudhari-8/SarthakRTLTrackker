@@ -175,7 +175,7 @@ const Todo = () => {
             required
           />
 
-          <textarea
+          <input
             className="todo-textarea"
             placeholder="Add description"
             name="description"
