@@ -1,7 +1,7 @@
 // export const host = "http://localhost:3000";
-// export const host = "https://sarthak-rtl-trackker-ei68.vercel.app";
+ export const host = "https://sarthak-rtl-trackker-ei68.vercel.app";
 
-export const host = "https://sarthakrtltrackker-1.onrender.com";
+// export const host2 = "https://sarthakrtltrackker-1.onrender.com";
 
 
 
@@ -20,3 +20,4 @@ export const getSecureListRoute = `${host}/getSecureList`
 export const setSecureListRoute = `${host}/setSecureList`
 export const deleteSecureListRoute = `${host}/deleteSecureList`
 export const getPasswordRoute = `${host}/getPassword`
+export const saveSubscriptionRoute = `${host}/save-subscription`;
