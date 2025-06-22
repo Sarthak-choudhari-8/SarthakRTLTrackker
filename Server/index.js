@@ -3,9 +3,7 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
-const webpush = require("web-push");
 const path = require("path");
-const cron = require('node-cron');
 
 const app = express();
 const PORT = 3000;
@@ -16,12 +14,14 @@ const FinanceList = require("./model/Finance_List");
 const SecureList = require("./model/SecureList");
 const Password = require("./model/Password");
 
+const nodemailer = require("nodemailer");
+const schedule = require('node-schedule');
+
 const DBURL = "mongodb+srv://sarthakchaudhari888:7a591DYYLVC1W5tk@cluster0.klwxsr3.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 
 app.use(cors({ origin: "*" }));
 app.use(express.json());
 
-let subscriptions = []; // global array to store push subscriptions
 
 // Connect to MongoDB
 async function main() {
@@ -34,15 +34,16 @@ async function main() {
 }
 main();
 
-// VAPID Keys
-const publicVapidKey = "BIrT1X8Ea7Vds-D7n8sWQd9OFlHLK7jHPE61j5sn3uGAnAU4k_IcMtGDttOPvZhSAVb7VOYXwkCPKTcImj3TZO4";
-const privateVapidKey = "Jd7gqvI-spb5wFyOnF1t9ozYv8tH-ORvgMV0QHBeFsQ";
+const transporter = nodemailer.createTransport({
+    host: "smtp-relay.brevo.com", // Brevo's SMTP server
+    port: 587, // Use 587 for TLS or 465 for SSL
+    secure: false, // Set to true if using port 465
+    auth: {
+        user: "8da1ba001@smtp-brevo.com",  // Replace with your Brevo SMTP username
+        pass: "r9YtFzDv72sV5TcZ"   // Replace with your Brevo SMTP password
+    }
+});
 
-webpush.setVapidDetails(
-  "mailto:sarthakchaudhari888@gmail.com",
-  publicVapidKey,
-  privateVapidKey
-);
 
 // Root Route
 app.get("/", (req, res) => {
@@ -60,14 +61,77 @@ app.get("/getTodos", async (req, res) => {
 });
 
 app.post("/postTodo", async (req, res) => {
-  try {
-    const { title, description, sendDateTime } = req.body;
-    const todo = new TodoList({ title, description, sendDateTime: new Date(sendDateTime) });
-    await todo.save();
+
+
+       let { title, description,sendDateTime} = req.body;
+
+    let sendDateObj = new Date(sendDateTime);
+
+  
+    sendDateObj.setHours(sendDateObj.getHours() );
+    sendDateObj.setMinutes(sendDateObj.getMinutes() );
+
+   
+
+    let todo1 = new TodoList({
+        title: title,
+        description: description,
+        sendDateTime: sendDateObj,
+    });
+
+        await todo1.save();
+
+
+
+
+
+
+        schedule.scheduleJob(sendDateObj, async function(){
+            console.log("Sending Email Now...");
+    
+           let mailOptions = {
+    from: 'chaudharisarthak727@gmail.com',
+    to: 'sarthakchaudhari888@gmail.com',
+    subject: `📌 Reminder: ${title}`,
+  html: `
+  <div style="font-family: Arial, sans-serif; padding: 20px; background-color: #f4f4f4;">
+    <div style="max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 8px; border: 1px solid #ddd;">
+      <h2 style="color: #333;">🔔 Reminder Notification</h2>
+
+      <p>Hi there,</p>
+
+      <p>This is a gentle reminder about your upcoming task. Here's the information:</p>
+
+      <p><strong>📌 Task:</strong> ${description}</p>
+      <p><strong>🗓️ Scheduled Time:</strong> ${sendDateObj.toLocaleString()}</p>
+
+      <p>Make sure to complete it on time to stay on track. You've got this!</p>
+
+      <hr style="margin: 30px 0; border: none; border-top: 1px solid #ccc;" />
+
+      <p style="font-size: 12px; color: #777;">
+        Sent automatically by <strong>RTL Tracker App</strong> to help you manage your tasks better.  
+        <br/>
+        Stay productive! ✨
+        <br/>
+        — Sarthak
+      </p>
+    </div>
+  </div>
+`
+};
+            try {
+                await transporter.sendMail(mailOptions);
+                console.log("Email sent successfully ");
+            } catch (error) {
+                console.error('Error sending email:', error);
+            }
+        });
+    
+  
+
     res.json({ status: true });
-  } catch (error) {
-    res.status(500).json({ status: false, error: "Failed to save todo" });
-  }
+  
 });
 
 app.post("/deleteTodo", async (req, res) => {
@@ -194,67 +258,10 @@ app.post("/deleteSecureList", async (req, res) => {
   }
 });
 
-// Push Notification Endpoints
-app.post('/save-subscription', (req, res) => {
-  const subscription = req.body;
-  subscriptions.push(subscription);
-  res.status(201).json({});
-});
 
-app.post('/sendNotification', async (req, res) => {
-  const { title, message } = req.body;
-  const payload = JSON.stringify({ title, message });
 
-  try {
-    const results = subscriptions.map(sub =>
-      webpush.sendNotification(sub, payload).catch(err => {
-        if (err.statusCode === 410 || err.statusCode === 404) {
-          subscriptions = subscriptions.filter(s => s !== sub);
-        }
-      })
-    );
 
-    await Promise.all(results);
-    res.json({ success: true });
-  } catch (err) {
-    console.error("Error sending notifications", err);
-    res.status(500).json({ error: "Failed to send notifications" });
-  }
-});
 
-// --- CRON JOB to Send Notifications Every Minute ---
-cron.schedule("* * * * *", async () => {
-  try {
-    const now = new Date();
-    const start = new Date(now.setSeconds(0, 0));
-    const end = new Date(start.getTime() + 60000); // +1 minute
-
-    const todosToNotify = await TodoList.find({
-      sendDateTime: { $gte: start, $lt: end }
-    });
-
-    todosToNotify.forEach(todo => {
-      const payload = JSON.stringify({
-        title: "📝 Todo Reminder",
-        message: `${todo.title} - ${todo.description}`
-      });
-
-      subscriptions.forEach(sub => {
-        webpush.sendNotification(sub, payload).catch(err => {
-          if (err.statusCode === 410 || err.statusCode === 404) {
-            subscriptions = subscriptions.filter(s => s !== sub);
-          }
-        });
-      });
-
-      console.log(`📨 Notification sent for: ${todo.title}`);
-    });
-  } catch (error) {
-    console.error("❌ Error in cron job:", error);
-  }
-});
-
-// Start Server
 app.listen(PORT, () => {
   console.log(`🚀 Server listening on port ${PORT}`);
 });

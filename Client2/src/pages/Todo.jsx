@@ -7,19 +7,13 @@ import {
   getTodosRoute,
   deleteTodoRoute,
   markDoneTodoRoute,
+  getPasswordRoute,
   host, // Import host to send subscription to backend
 } from "../utility/APIRouter";
 
 import Navbar from "../components/Navbar";
 import "../CSSFILES/todo.css";
 
-// Helper to convert VAPID key from base64 to Uint8Array
-function urlBase64ToUint8Array(base64String) {
-  const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
-  const base64 = (base64String + padding).replace(/\-/g, "+").replace(/_/g, "/");
-  const rawData = window.atob(base64);
-  return Uint8Array.from([...rawData].map((char) => char.charCodeAt(0)));
-}
 
 const Todo = () => {
   const Navigate = useNavigate();
@@ -31,6 +25,8 @@ const Todo = () => {
     sendTime: "",
   });
 
+  const [verified, setVerified] = useState(false);
+  const [inputPassword, setInputPassword] = useState('');
   let [Data, setData] = useState([]);
 
   // Fetch all todos from backend
@@ -46,58 +42,6 @@ const Todo = () => {
   // Setup Service Worker and Push Notifications
   useEffect(() => {
         fetchTodos();
-
-    if ("serviceWorker" in navigator && "PushManager" in window) {
-      navigator.serviceWorker
-        .register("/service-worker.js")
-        .then((registration) => {
-          console.log("Service Worker registered:", registration);
-
-          if (Notification.permission === "granted") {
-            // Permission already granted
-            return registration;
-          } else {
-            // Request notification permission
-            return Notification.requestPermission().then((permission) => {
-              if (permission !== "granted") {
-                alert("Notification permission denied");
-                throw new Error("Notification permission denied");
-              }
-              return registration;
-            });
-          }
-        })
-        .then((registration) => {
-          const vapidPublicKey =
-            "BIrT1X8Ea7Vds-D7n8sWQd9OFlHLK7jHPE61j5sn3uGAnAU4k_IcMtGDttOPvZhSAVb7VOYXwkCPKTcImj3TZO4";
-          const convertedVapidKey = urlBase64ToUint8Array(vapidPublicKey);
-
-          return registration.pushManager.getSubscription().then((subscription) => {
-            if (subscription) return subscription;
-
-            return registration.pushManager.subscribe({
-              userVisibleOnly: true,
-              applicationServerKey: convertedVapidKey,
-            });
-          });
-        })
-        .then(async (subscription) => {
-          console.log("Push subscription:", JSON.stringify(subscription));
-
-          // Send subscription object to backend to save it
-          try {
-            await axios.post(`${host}/save-subscription`, subscription);
-            console.log("Subscription saved on server");
-          } catch (error) {
-            console.error("Failed to save subscription:", error);
-          }
-        })
-        .catch((error) => {
-          console.error("Service Worker or Push subscription error:", error);
-        });
-    } else {
-      console.warn("Push messaging is not supported");
-    }
   }, []);
 
   // Fetch todos on component mount
@@ -157,6 +101,40 @@ const Todo = () => {
       console.error("Error updating todo status:", error);
     }
   };
+
+  const handleVerify = async () => {
+
+   let {data} = await  axios.get(getPasswordRoute);
+
+    if (inputPassword ===   data.pass.SecurePass) {
+      setVerified(true);
+    } else {
+      alert("Incorrect Password!");
+    }
+  };
+
+    if (!verified) {
+  
+      return (
+        <>
+        <Navbar current="Secure"/> 
+  
+       
+        <div className="passwordBox">
+                <p className="passwordHeading">Enter Password to Access Listings </p>
+                <input
+                className="passInput"
+                  type="password"
+                  value={inputPassword}
+                  onChange={(e) => setInputPassword(e.target.value)}
+                  placeholder="Enter Password"
+                />
+                <button className="passButton" onClick={handleVerify}>Verify</button>
+              </div>
+        </>
+      );
+  
+    }
 
   return (
     <div id="Todo-Top">

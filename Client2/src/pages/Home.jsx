@@ -6,6 +6,7 @@ import "../CSSFILES/Home.css";
 
 const Home = () =>{
 
+    
 
 return(
 <div className="HomeContainer">
