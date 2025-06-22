@@ -68,8 +68,8 @@ app.post("/postTodo", async (req, res) => {
     let sendDateObj = new Date(sendDateTime);
 
   
-    sendDateObj.setHours(sendDateObj.getHours() + 5 );
-    sendDateObj.setMinutes(sendDateObj.getMinutes() + 30 );
+    sendDateObj.setHours(sendDateObj.getHours() );
+    sendDateObj.setMinutes(sendDateObj.getMinutes()  );
 
    
 
@@ -88,6 +88,7 @@ app.post("/postTodo", async (req, res) => {
 console.log(sendDateObj);
 
         schedule.scheduleJob(sendDateObj, async function(){
+
             console.log("Sending Email Now...");
     
            let mailOptions = {
