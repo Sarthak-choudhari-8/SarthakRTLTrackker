@@ -117,7 +117,7 @@ const Todo = () => {
   
       return (
         <>
-        <Navbar current="Secure"/> 
+        <Navbar current="Todo"/> 
   
        
         <div className="passwordBox">
