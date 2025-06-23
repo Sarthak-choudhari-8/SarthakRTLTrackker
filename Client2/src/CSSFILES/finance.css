@@ -117,7 +117,7 @@ left: 20px;
 .TotalAmount{
     border: 1px solid black;
     height: 30px;
-    width: 65px;
+    width: 70px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -169,7 +169,7 @@ left: 20px;
 .editForm input{
     
     width: 50px;
-    margin-right: 10px;
+    margin-right: 20px;
    text-align: center;
    
     background-color: transparent;
