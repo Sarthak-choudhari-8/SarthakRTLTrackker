@@ -32,7 +32,9 @@ return(
 
 
 <div className="profileDescription">
-Hey there, I am Sarthak , a dedicated developer with a passion for creating innovative solutions using the MERN stack . Through countless hours of learning and hands-on experience . <br/> I have honed my skills in building robust and scalable web applications that captivate and inspire.<br /> <br /> I am currently immersing myself in the world of Data Structures and Algorithm using Java. This journey of exploration fuels my curiosity and drives me to continually improve and expand my knowledge base .</div>
+RTL Tracker is a comprehensive personal productivity and finance management web application designed to streamline daily tasks, reminders, and financial tracking. Along with task scheduling and automated email reminders, RTL Tracker offers features to manage transactions, monitor balance details, and organize personal listings and wishlists.<br/>  <br/> RTL Tracker provides a smooth and secure user experience—helping individuals stay productive, financially aware, and well-organized in one unified platform.
+
+</div>
 
 </div>
 

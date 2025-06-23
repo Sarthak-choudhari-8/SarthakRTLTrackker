@@ -105,7 +105,7 @@ console.log(sendDateObj);
       <p>This is a gentle reminder about your upcoming task. Here's the information:</p>
 
       <p><strong>📌 Task:</strong> ${description}</p>
-      <p><strong>🗓️ Scheduled Time:</strong> ${sendDateObj.toLocaleString()}</p>
+      <p><strong>🗓️ Scheduled Time:</strong> ${sendDateObj.toLocaleString() } UST </p>
 
       <p>Make sure to complete it on time to stay on track. You've got this!</p>
 
